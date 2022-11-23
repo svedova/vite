@@ -234,7 +234,7 @@ async function handleMessage(payload: HMRPayload) {
       // (.e.g style injections)
       // TODO Trigger their dispose callbacks.
       payload.paths.forEach((path) => {
-        const fn = pruneMap.get(path)
+        const fn = disposeMap.get(path)
         if (fn) {
           fn(dataMap.get(path))
         }
@@ -471,7 +471,6 @@ type CustomListenersMap = Map<string, ((data: any) => void)[]>
 
 const hotModulesMap = new Map<string, HotModule>()
 const disposeMap = new Map<string, (data: any) => void | Promise<void>>()
-const pruneMap = new Map<string, (data: any) => void | Promise<void>>()
 const dataMap = new Map<string, any>()
 const customListenersMap: CustomListenersMap = new Map()
 const ctxToListenersMap = new Map<string, CustomListenersMap>()
@@ -544,10 +543,6 @@ export function createHotContext(ownerPath: string): ViteHotContext {
 
     dispose(cb) {
       disposeMap.set(ownerPath, cb)
-    },
-
-    prune(cb) {
-      pruneMap.set(ownerPath, cb)
     },
 
     // TODO

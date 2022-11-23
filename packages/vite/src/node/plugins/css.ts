@@ -394,7 +394,7 @@ export function cssPostPlugin(config: ResolvedConfig): Plugin {
             modulesCode ||
             `import.meta.hot.accept()\nexport default __vite__css`
           }`,
-          `import.meta.hot.prune(() => __vite__removeStyle(__vite__id))`
+          `import.meta.hot.dispose(() => __vite__removeStyle(__vite__id))`
         ].join('\n')
         return { code, map: { mappings: '' } }
       }
